@@ -18,7 +18,7 @@ export default function Header() {
        Blog
       </Link>
 
-      <form className='md:order-1'>
+      <form className='md:order-3'>
         <TextInput
         type='text'
         placeholder='search'
@@ -31,12 +31,12 @@ export default function Header() {
         <AiOutlineSearch />
       </Button>
 
-      <div className='flex gap-2'>
+      <div className='flex gap-2 md:order-last'>
         <Button className='w-12 h-10 hidden sm:inline' color='gray'>
             <FaMoon />
         </Button>
         <Link to='signin'>
-          <Button gradientDuoTone='purpleToBlue'>
+          <Button gradientDuoTone='purpleToBlue' outline>
             Sign in 
           </Button>
         </Link>
@@ -46,13 +46,13 @@ export default function Header() {
 
       <Navbar.Collapse>
            <Navbar.Link active={path === '/'} href='/'>
-             home
+             <span className='text-lg'> home  </span>
            </Navbar.Link  >
            <Navbar.Link active={path === '/about'} href='/about'>
-             about
+           <span className='text-lg'> about  </span>
            </Navbar.Link>
            <Navbar.Link active={path === '/projects'} href='/projects'>
-              projects
+           <span className='text-lg'> projects  </span>
            </Navbar.Link>
       </Navbar.Collapse>
       
