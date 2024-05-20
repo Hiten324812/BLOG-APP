@@ -1,9 +1,15 @@
+import { Button } from 'flowbite-react'
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 export default function Signin() {
   return (
     <div>
-      <h1 className='text-3xl'> sign in </h1>
+     <Link to='/signup'>
+      <Button>
+      sign up 
+      </Button>
+     </Link>
     </div>
   )
 }
