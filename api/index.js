@@ -23,8 +23,10 @@ app.use('/api/auth', authroutes)
 
 
 app.use((err,req,res,next) => {
-    const statuscode = err.statusCode || 500
+    const statuscode = err.statuscode || 500
     const message = err.message || 'internal server'
+
+    console.log(err)
 
     res.status(statuscode).json({
         success:false,

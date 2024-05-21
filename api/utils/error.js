@@ -1,10 +1,9 @@
 
  const error = (statuscode,message) => {
-  const error = new Error()
-  error.statuscode = statuscode
-  error.message = message
-
-  return error;
+  const errors = new Error()
+  errors.statuscode = statuscode
+  errors.message = message
+  return errors;
 }
 
 module.exports = error

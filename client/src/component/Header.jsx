@@ -14,7 +14,7 @@ export default function Header() {
     <Navbar className='border-b-2'>
       <Link to='/' className='self-center text-base md:text-2xl'>
       
-      <span className='px-2 py-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white' >hiten's</span>
+      <span className='px-2 py-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-lg text-white' >Hiten's</span>
        Blog
       </Link>
 

@@ -39,6 +39,7 @@ export default function Signup() {
 
           if ( data.success === false) // index.js settings for error 
             {
+              setloading(false)
               return seterrormessage(data.message)
             }
 
