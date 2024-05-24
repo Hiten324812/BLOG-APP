@@ -27,7 +27,7 @@ export default function FooterCom() {
             100 JS Projects
           </Footer.Link>
           <Footer.Link className='md:text-base'>
-            Sahand's Blog
+            Hiten's Blog
           </Footer.Link>
          </Footer.LinkGroup>
         </div>
