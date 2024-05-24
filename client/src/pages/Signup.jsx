@@ -1,6 +1,7 @@
 import { Alert, Button, Label, Spinner, TextInput } from 'flowbite-react'
 import React, { useState } from 'react'
 import { Link , useNavigate } from 'react-router-dom'
+import OAuth from '../component/OAuth'
 
 export default function Signup() {
   
@@ -108,7 +109,10 @@ export default function Signup() {
             </>) : 'signup'
           }
          </Button>
+         <OAuth />
       </form>
+
+    
 
       { errormessage && (
         <Alert className='mt-5 text-base' color='failure'>

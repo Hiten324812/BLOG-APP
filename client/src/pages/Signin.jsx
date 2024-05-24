@@ -4,6 +4,7 @@ import { Link , useNavigate } from 'react-router-dom'
 import { signinstart , signinsuccess , signinfailure} from '../redux/user/userSlice'
 
 import { useDispatch , useSelector } from 'react-redux'
+import OAuth from '../component/OAuth'
 
 export default function Signup() {
   
@@ -37,6 +38,8 @@ export default function Signup() {
 
          
           const data = await res.json();
+
+          console.log(data)
 
           if ( data.status !== 200) // index.js settings for error 
             {
@@ -101,7 +104,10 @@ export default function Signup() {
             </>) : 'sign in'
           }
          </Button>
+         <OAuth />
       </form>
+
+      
 
       { errormessage && (
         <Alert className='mt-5 text-base' color='failure'>

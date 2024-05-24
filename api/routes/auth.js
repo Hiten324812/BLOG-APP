@@ -7,5 +7,5 @@ const router = express.Router()
 
 router.post('/signup',authcontrollers.signup)
 router.post('/signin',authcontrollers.signin)
-
+router.post('/google',authcontrollers.google)
 module.exports = router
