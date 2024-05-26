@@ -6,11 +6,11 @@ import { signinstart , signinsuccess , signinfailure} from '../redux/user/userSl
 import { useDispatch , useSelector } from 'react-redux'
 import OAuth from '../component/OAuth'
 
-export default function Signup() {
+export default function Signin() {
   
   const [formdata,setformdata] = useState({})
-  const dispatch = useDispatch()
   const { loading , error : errormessage } = useSelector(state => state.user)
+  const dispatch = useDispatch()
   const navigate = useNavigate()
 
   const handlechange = (e) => {
@@ -54,7 +54,7 @@ export default function Signup() {
 
        } catch(error) {
           dispatch(signinfailure(error.message))
-          console.log(error)
+          
        }
 
    }
@@ -109,7 +109,8 @@ export default function Signup() {
 
       
 
-      { errormessage && (
+      { errormessage && 
+      (
         <Alert className='mt-5 text-base' color='failure'>
           {errormessage}
         </Alert>
