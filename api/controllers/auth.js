@@ -54,11 +54,11 @@ exports.signin = async (req,res,next) => {
           const validpassword = bcryptjs.compareSync(password,validuser.password)
 
         if ( !validpassword ) {
-          return next(errorhandler(400,'invalid password hiten'))
+          return next(errorhandler(400,'invalid password'))
         }
 
         const token = jwt.sign({
-            userid : validuser._id  
+            id : validuser._id  
         } , process.env.JWT_SECRET 
       )
 

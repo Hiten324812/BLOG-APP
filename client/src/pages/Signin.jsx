@@ -40,16 +40,13 @@ export default function Signin() {
           const data = await res.json();
 
           console.log(data)
-
-          if ( data.status !== 200) // index.js settings for error 
-            {
-             dispatch(signinfailure(data.message))
-            }
-          
         
             if(res.ok) {
               dispatch(signinsuccess(data))
               navigate('/')
+            }
+            else {
+              dispatch(signinfailure(data.message))
             }
 
        } catch(error) {

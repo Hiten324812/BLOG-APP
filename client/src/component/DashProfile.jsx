@@ -1,15 +1,18 @@
-import { Alert, Button, FileInput, TextInput } from 'flowbite-react'
+import { Alert, Button, FileInput, Modal, Spinner, TextInput } from 'flowbite-react'
 import React, { useState ,useRef, useEffect } from 'react'
-import { useSelector } from 'react-redux'
+import { useSelector ,useDispatch } from 'react-redux'
+import { signinstart , signinsuccess , signinfailure , updatestart , updatesuccess , updatefailure , deleteuserstart , deleteusersuccess , deleteuserfailure , signoutSuccess } from '../redux/user/userSlice'
 import { getDownloadURL, getStorage, ref, uploadBytesResumable} from 'firebase/storage'
 import { app } from '../firebase'
-import { HiInformationCircle } from 'react-icons/hi'
+import { HiInformationCircle, HiOutlineExclamation, HiOutlineExclamationCircle } from 'react-icons/hi'
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 
 export default function DashProfile() {
 
-  const { currentUser} = useSelector(state => state.user)
+  const { currentUser , loading , error : errormessage } = useSelector(state => state.user)
+
+  const dispatch = useDispatch()
 
   const [imageFile , setImageFile] = useState(null)
   const [imageFileUrl , setimageFileUrl] = useState(null)
@@ -18,7 +21,11 @@ export default function DashProfile() {
   const filePickeref = useRef()
 
   const [imagefileuploaderror,setimagefileuploaderror] = useState(null)
-
+  const [formdata,setformdata] = useState({})
+  const [uploading,setuploading] = useState(false)
+  const [updateusersuccess,setupdateusersuccess] = useState(null)
+  const [updateusererror , setupdateusererror] = useState(null)
+  const [showmodel,setshowmodel] = useState(false)
 
   useEffect( () => {
     if(imageFile)
@@ -41,7 +48,7 @@ export default function DashProfile() {
   const uploadImage = async () => {
 
     setimagefileuploaderror(null)
-    
+    setuploading(true)
     const storage = getStorage(app)
     const filename = new Date().getTime() + imageFile.name
 
@@ -61,12 +68,16 @@ export default function DashProfile() {
          setimageFileUrl('')
          setuploadfile(0)
          setImageFile(null)
+         setuploading(false)
   
       } ,
       () => {
         getDownloadURL(uploadtask.snapshot.ref)
         .then( (downloadUrl) => {
           setimageFileUrl(downloadUrl);
+          setuploadfile(0)
+          setuploading(false)
+          setformdata({...formdata, profilepicture : downloadUrl})
         })
       }
     )
@@ -83,6 +94,100 @@ export default function DashProfile() {
     
   }
 
+  const handlechange = (e) => {
+    setformdata({...formdata , [e.target.id] : e.target.value.trim() })
+  }
+  const handlesubmit =  async (e) => {
+       e.preventDefault();
+
+       setupdateusersuccess(null)
+       setupdateusererror(null)
+
+       dispatch(updatefailure(null))
+
+       if ( Object.keys(formdata).length === 0) {
+           return setupdateusererror('no changes made')
+       }
+
+       if ( !formdata.password ) {
+          return setupdateusererror('password does not empty')
+       }
+
+       
+       try{
+          
+         dispatch(updatestart());
+
+         const res = await fetch(`/api/user/update/${currentUser._id}`, {
+          method : 'PUT' ,
+          headers : { 'content-Type' : 'application/json'} ,
+          body : JSON.stringify(formdata)
+         } )
+
+        const data = await res.json()
+
+    
+        if (res.ok) {
+          dispatch(updatesuccess(data)) 
+          setimageFileUrl(null)
+          setImageFile(null)
+          setupdateusersuccess(' User profile updated successfully !!!')
+        }
+        else
+        {
+          dispatch(updatefailure(data.message))
+        }
+
+       } catch(error) {
+            dispatch(updatefailure(error.message))
+       }
+
+  }
+
+  const handledelete = async() => {
+
+     setshowmodel(false);
+     try {
+  
+       dispatch(deleteuserstart()) 
+       const res = await fetch(`/api/user/delete/${currentUser._id}`,{
+        method : 'DELETE'
+       });
+
+       const data = res.json();
+      
+       if (!res.ok) {
+         dispatch(deleteuserfailure(data.message))
+       }
+       else {
+        dispatch(deleteusersuccess())
+       }
+
+     } catch(error) {
+              dispatch(deleteuserfailure(error.message))
+     }
+     
+
+  }
+
+  const handlesignout = async() => {
+    try {
+      const res = await fetch('/api/user/signout' , {
+        method : 'POST',
+      });
+  
+      const data = await res.json();
+      if (!res.ok){
+        console.log(data.message)
+      }else
+      {
+        dispatch(signoutSuccess())
+      }
+    } catch (error) {
+      console.log(error.message)
+    }
+  }
+
   return (
 
     <div className='max-w-lg mx-auto w-full'>
@@ -91,7 +196,7 @@ export default function DashProfile() {
        Profile 
      </h1>
     
-       <form className='flex flex-col gap-8'>
+       <form className='flex flex-col gap-8' onSubmit={handlesubmit}>
 
         <input type='file' accept='image/*'
          onChange={handlefile}
@@ -103,7 +208,7 @@ export default function DashProfile() {
         <div className='relative w-32 h-32 self-center overflow-hidden 
         ' onClick={() => filePickeref.current.click()}>
 
-        <img src={ imageFileUrl || currentUser.profilepicture} alt='picture' className={`object-cover h-full w-full rounded-full shadow-md border-[lightgray] border-4
+        <img src={ imageFileUrl || currentUser.profilepicture } alt='picture' className={`object-cover h-full w-full rounded-full shadow-md border-[lightgray] border-4
         ${uploadfile && uploadfile < 100 && 'opacity-50' }`}   />
 
        { uploadfile && (
@@ -142,23 +247,68 @@ export default function DashProfile() {
           <TextInput type='text' id='email' placeholder='username'
            defaultValue={currentUser.email} disabled/>
 
-          <TextInput type='text' id='password' placeholder='password'
+          <TextInput type='text' id='password' placeholder='password' onChange={handlechange}
           />
 
-           <Button type='submit' gradientDuoTone='purpleToBlue' outline> <span className='text-xl' >
-            Update 
+          { errormessage ? (
+             <Alert color='failure' className='text-base'>
+              {errormessage}
+             </Alert>
+          ) : null }
+
+           <Button type='submit' gradientDuoTone='purpleToBlue' outline disabled={loading || uploading}> <span className='text-xl' >
+             { loading || uploading ? 
+             ( <>
+               <Spinner />
+               <span className='mx-2 text-base'> Loading... </span>
+              </> ) : 'update'
+             }
             </span> </Button>
         
        </form>
+
+       { updateusersuccess && (
+        <Alert color='success' className='mt-5 text-base'>
+          {updateusersuccess}
+        </Alert>
+       )}
+
+       {
+         updateusererror && (
+          <Alert color='failure' className='mt-5 text-base'>
+            {updateusererror}
+          </Alert>
+         )
+       }
       
       <div className='text-red-500 flex justify-between mt-5'>
-        <span className='cursor-pointer'>
+        <span className='cursor-pointer' onClick={ () => setshowmodel(true)}>
           Delete Account ?
         </span>
-        <span className='cursor-pointer'>
+        <span onClick={handlesignout} className='cursor-pointer'>
           Sign Out 
         </span>
       </div>
+
+      <Modal show={showmodel} onClose={() => setshowmodel(false)} popup size="md">
+        <Modal.Header />
+        <Modal.Body >
+          <div className="text-center">
+            <HiOutlineExclamationCircle className='mx-auto h-12 w-12
+          text-gray-400 dark:text-gray-200 mb-4' />
+
+           <h3 className='text-lg mb-4 text-gray-500 dark:text-gray-400'>
+            Are you sure you want to delete your account ?
+           </h3>
+
+           <div className='flex justify-center gap-4'>
+              <Button color='failure' onClick={handledelete} > Yes, I'm sure </Button>
+              <Button color='gray'onClick={ () => setshowmodel(false) } > No, Cancel  </Button>
+           </div>
+          </div>
+        </Modal.Body>
+      </Modal>
+      
     </div>
 
   )

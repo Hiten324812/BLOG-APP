@@ -6,7 +6,6 @@ const error = require('./error')
  exports.verifytoken = (req,res,next) => {
     const token = req.cookies.access;
 
-    
 
     if ( !token ) {
         return next(error(401,'unauthorized accesss'));
@@ -18,7 +17,7 @@ const error = require('./error')
                 return next(error(401,'unauthorized access'))
             }
             req.user = user;
-           
+         
             next();
     })
 
