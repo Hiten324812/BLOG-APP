@@ -137,13 +137,13 @@ export default function DashProfile() {
          }
             
           <TextInput type='text' id='username' placeholder='username'
-           defaultValue={currentUser.username}/>
+           defaultValue={currentUser.username} disabled />
 
           <TextInput type='text' id='email' placeholder='username'
-           defaultValue={currentUser.email}/>
+           defaultValue={currentUser.email} disabled/>
 
-          <TextInput type='text' id='password' placeholder='username'
-           defaultValue='*******' />
+          <TextInput type='text' id='password' placeholder='password'
+          />
 
            <Button type='submit' gradientDuoTone='purpleToBlue' outline> <span className='text-xl' >
             Update 

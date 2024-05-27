@@ -80,8 +80,6 @@ exports.google = async(req,res,next) => {
 
   const { username , email , googlephotourl } = req.body
 
-  console.log(req.body)
-
   try {
          const user = await User.findOne( {email})
          
