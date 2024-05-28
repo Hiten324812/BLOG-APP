@@ -58,7 +58,8 @@ exports.signin = async (req,res,next) => {
         }
 
         const token = jwt.sign({
-            id : validuser._id  
+            id : validuser._id  ,
+            isadmin : validuser.isadmin
         } , process.env.JWT_SECRET 
       )
 
@@ -84,7 +85,9 @@ exports.google = async(req,res,next) => {
          const user = await User.findOne( {email})
          
          if (user){
-          const token = jwt.sign( {id : user._id } , process.env.JWT_SECRET)
+          const token = jwt.sign( {id : user._id ,
+            isadmin : user.isadmin
+           } , process.env.JWT_SECRET)
 
           const { password , ...rest} = user._doc
          
@@ -107,7 +110,8 @@ exports.google = async(req,res,next) => {
 
           await newuser.save();
 
-           const token = jwt.sign({ id : newuser._id }, process.env.JWT_SECRET)
+           const token = jwt.sign({ id : newuser._id ,  
+            isadmin : newuser.isadmin }, process.env.JWT_SECRET)
 
            const { password , ...rest} = newuser._doc
           res.status(200)

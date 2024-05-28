@@ -23,6 +23,10 @@ const userschema = new schema({
     profilepicture : {
         type : String,
         default : "https://cdn1.vectorstock.com/i/1000x1000/31/05/profile-outline-symbol-dark-on-white-background-vector-4453105.jpg"
+    } ,
+    isadmin : {
+        type : Boolean,
+        default : false
     }
 } , { timestamps : true }
 )

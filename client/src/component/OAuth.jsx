@@ -19,6 +19,9 @@ export default function OAuth() {
 
           try {
              const resultgoogle = await signInWithPopup(auth,provider)
+            
+             console.log(resultgoogle)
+
              const res = await fetch('/api/auth/google' , {
                 method : 'POST',
                 headers : { 'Content-Type' : 'application/json'} ,
@@ -30,6 +33,8 @@ export default function OAuth() {
              })
 
              const data = await res.json()
+
+             console.log(data,res)
 
              if ( res.ok )
                 {

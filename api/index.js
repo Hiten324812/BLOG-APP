@@ -4,12 +4,14 @@ const dotenv = require('dotenv')
 const useroutes = require('./routes/user')
 const authroutes = require('./routes/auth')
 const cookieparser = require('cookie-parser')
+const cors = require('cors')
 
 dotenv.config();
 
 const app = express()
 
 app.use(cookieparser())
+
 
 app.use(express.json())
 
