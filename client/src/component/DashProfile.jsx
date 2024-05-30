@@ -1,6 +1,7 @@
 import { Alert, Button, FileInput, Modal, Spinner, TextInput } from 'flowbite-react'
 import React, { useState ,useRef, useEffect } from 'react'
 import { useSelector ,useDispatch } from 'react-redux'
+import {Link} from 'react-router-dom'
 import { signinstart , signinsuccess , signinfailure , updatestart , updatesuccess , updatefailure , deleteuserstart , deleteusersuccess , deleteuserfailure , signoutSuccess } from '../redux/user/userSlice'
 import { getDownloadURL, getStorage, ref, uploadBytesResumable} from 'firebase/storage'
 import { app } from '../firebase'
@@ -8,9 +9,11 @@ import { HiInformationCircle, HiOutlineExclamation, HiOutlineExclamationCircle }
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 
+
 export default function DashProfile() {
 
   const { currentUser , loading , error : errormessage } = useSelector(state => state.user)
+  const {theme} = useSelector ( state => state.theme )
 
   const dispatch = useDispatch()
 
@@ -264,6 +267,16 @@ export default function DashProfile() {
               </> ) : 'update'
              }
             </span> </Button>
+
+
+            { currentUser && currentUser.isadmin && (
+              <Link to='/create-post'>
+               <Button type='button' className='w-full' gradientDuoTone='purpleToPink'
+               >
+                   <span className='text-xl'> create a post  </span>
+              </Button>
+              </Link>
+            )}
         
        </form>
 
@@ -289,15 +302,15 @@ export default function DashProfile() {
           Sign Out 
         </span>
       </div>
-
-      <Modal show={showmodel} onClose={() => setshowmodel(false)} popup size="md">
+      
+      <Modal show={showmodel} size="md" onClose={() => setshowmodel(false)} popup>
         <Modal.Header />
-        <Modal.Body >
+        <Modal.Body className=' dark:bg-gray-500' >
           <div className="text-center">
-            <HiOutlineExclamationCircle className='mx-auto h-12 w-12
-          text-gray-400 dark:text-gray-200 mb-4' />
+            <HiOutlineExclamationCircle className='mx-auto h-12 w-12 
+           dark:text-gray-200 mb-4' />
 
-           <h3 className='text-lg mb-4 text-gray-500 dark:text-gray-400'>
+           <h3 className='text-lg mb-4 dark:text-gray-400'>
             Are you sure you want to delete your account ?
            </h3>
 
@@ -308,7 +321,6 @@ export default function DashProfile() {
           </div>
         </Modal.Body>
       </Modal>
-      
     </div>
 
   )
