@@ -79,3 +79,21 @@ exports.getpost = async (req,res,next) => {
         next(errorhandler(403,'result query not found'))
     }
 }
+
+exports.deletepost = async (req,res,next) => {
+    if ( !req.user.isadmin || req.user.id !== req.params.userid){
+        return next(errorhandler(403,'you are not allowed delete post'))
+    }
+
+    try {
+        await Post.findByIdAndDelete(req.params.postid)
+
+        res.status(200).json('the post has been deleted successfully')
+    
+    } catch (error) {
+        next(error);
+    }
+
+
+
+}

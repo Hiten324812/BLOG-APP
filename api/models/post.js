@@ -4,8 +4,8 @@ const { schema } = require('./user')
 
 const postschema = mongoose.Schema({
     userid : {
-        type : mongoose.Schema.Types.ObjectId ,
-        ref : 'user'
+        type : String,
+        required : true
     } ,
     content : {
         type : String,
