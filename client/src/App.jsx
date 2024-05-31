@@ -10,6 +10,7 @@ import Footer from './component/Footer'
 import PrivateRoute from './component/PrivateRoute'
 import CreatePost from './pages/CreatePost'
 import IsadminPrivateRoute from './component/IsadminPrivateRoute'
+import UpdatePost from './pages/UpdatePost'
 
 
 export default function App() {
@@ -26,6 +27,7 @@ export default function App() {
       </Route>
       <Route element={<IsadminPrivateRoute />}>
         <Route path='/create-post' element={ <CreatePost /> } />
+        <Route path='/update-post/:postid' element={<UpdatePost />} />
       </Route>
       <Route path='/projects' element={ <Projects /> } />
     </Routes>

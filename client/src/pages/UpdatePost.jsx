@@ -1,15 +1,16 @@
 import { Alert, Button, FileInput, Select, TextInput } from 'flowbite-react'
 import { HiInformationCircle } from "react-icons/hi";
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import { app } from '../firebase'
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate , useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
-export default function CreatePost() {
+export default function UpdatePost() {
 
   const [file,setfile] = useState(null)
 
@@ -25,6 +26,42 @@ export default function CreatePost() {
 
   const navigate = useNavigate()
  
+ const { postid } = useParams()
+
+ const { currentUser } = useSelector( state => state.user )
+
+ useEffect ( () => {
+    try{
+
+        const fetchpost = async () => {
+
+            const res =
+             await fetch(`/api/post/getposts?postid=${postid}`)
+
+            const data = await res.json()
+
+            if (!res.ok){
+                console.log(data.message)
+                setformerror(data.message)
+                return ;
+            }
+            else
+            {
+                setformerror(null)
+                setformdata(data[0])
+            }
+
+
+        }
+
+        fetchpost();
+
+    }
+    catch (error) {
+        console.log(error.message)
+    }
+
+ } , [postid])
 
   const handleuploadimage = async () => {
        
@@ -88,8 +125,8 @@ export default function CreatePost() {
     e.preventDefault();
       
      try {
-        const res = await fetch('/api/post/create-post',{
-          method :'POST',
+        const res = await fetch(`/api/post/update-post/${postid}/${currentUser._id}`,{
+          method :'PUT',
           headers : { 'content-Type' : 'application/json '},
           body : JSON.stringify(formdata)
         })
@@ -111,12 +148,13 @@ export default function CreatePost() {
 
    return (
     <div className='max-w-3xl mx-auto p-3 mb-14'>
-       <h1 className='text-3xl my-8 text-center'> create post </h1>
+       <h1 className='text-3xl my-8 text-center'> update post </h1>
        <form className='flex flex-col gap-4 mb-5' onSubmit={handlesubmit}>
          <div className='flex flex-col gap-8 justify-between md:flex-row'>
-             <TextInput type='text' id='title' placeholder='Title' required className='flex-1' onChange={ (e) => setformdata({...formdata , title : e.target.value})} />
+             <TextInput type='text' id='title' placeholder='Title' required className='flex-1' onChange={ (e) => setformdata({...formdata , title : e.target.value})}
+             value={formdata.title} />
 
-             <Select onChange={ (e) => setformdata({...formdata , category : e.target.value })} required>
+             <Select onChange={ (e) => setformdata({...formdata , category : e.target.value })} value={formdata.category} required>
                 <option value="uncategorized"> Select a category </option>
                 <option value='javascript'> javascript </option>
                 <option value='reactjs'> reactjs </option>
@@ -151,18 +189,19 @@ export default function CreatePost() {
             </div>
            )}
 
-           { imagefileurl && (
+           { formdata.image && (
             <div>
-              <img src={imagefileurl} alt='postimage' />
+              <img src={formdata.image} alt='postimage' />
             </div>
            )}
           
 
          <ReactQuill theme='snow' placeholder='write something' className='h-72 mb-12' required 
           onChange={ (value) => setformdata({...formdata,content : value}) }
+          value={formdata.content}
          />
 
-         <Button type='submit' gradientDuoTone='purpleToPink' disabled={imageuploadprogress}> publish </Button>
+         <Button type='submit' gradientDuoTone='purpleToPink' disabled={imageuploadprogress}> update post </Button>
        </form>
 
        { formerror && (

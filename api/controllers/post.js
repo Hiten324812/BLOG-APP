@@ -50,6 +50,12 @@ exports.getpost = async (req,res,next) => {
 
        const query = {};
 
+       if ( req.query.postid )
+        {
+            query._id = req.query.postid
+        }
+
+
        if (req.query.userid) {
            query.userid = req.query.userid;
        }
@@ -95,5 +101,30 @@ exports.deletepost = async (req,res,next) => {
     }
 
 
+
+}
+
+exports.updatepost = async (req,res,next) => {
+
+    if ( !req.user.isadmin || req.user.id !== req.params.userid )
+        {
+            return next(errorhandler(403,'you are not allowed to update this posts'));
+        }
+
+    try{
+
+        const updatedpost = await Post.findOneAndUpdate({
+            _id : req.params.postid 
+        } , {
+            ...req.body
+        } , { new : true })
+
+       res.status(200).json(updatedpost)
+
+    } catch (error) {
+
+        next(error)
+
+    }
 
 }
