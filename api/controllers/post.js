@@ -16,7 +16,7 @@ exports.createpost = async (req,res,next) => {
         return next(errorhandler(403,'please provide all required fields'))
     }
 
-    const slug = uniqueSlug() + req.body.title.trim().split(' ').join('-').toLowerCase() 
+    const slug = uniqueSlug() + req.body.title.trim().split(' ').join('-').toLowerCase().replace(/[^a-zA-Z0-9-]/g, '');
 
 
     const newpost = new Post({
@@ -50,9 +50,14 @@ exports.getpost = async (req,res,next) => {
 
        const query = {};
 
+
        if ( req.query.postid )
         {
             query._id = req.query.postid
+        }
+
+        if ( req.query.slug ) {
+            query.slug = req.query.slug 
         }
 
 
@@ -75,10 +80,12 @@ exports.getpost = async (req,res,next) => {
        .sort( {updatedAt : sortdirection} )
        .skip(startindex)
        .limit(limit)
+
         
        const total = await Post.countDocuments();
 
-       res.status(200).json(posts)
+       
+       res.status(200).json({posts})
 
     } catch (error) {
         console.log(error)

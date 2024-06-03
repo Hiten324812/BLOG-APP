@@ -1,10 +1,12 @@
 
 const mongoose = require('mongoose')
-const { schema } = require('./user')
 
-const postschema = mongoose.Schema({
+const schema = mongoose.Schema
+
+
+const postschema = schema({
     userid : {
-        type : String,
+        type : schema.Types.ObjectId,
         required : true
     } ,
     content : {

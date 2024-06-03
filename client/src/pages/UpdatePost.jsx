@@ -48,7 +48,7 @@ export default function UpdatePost() {
             else
             {
                 setformerror(null)
-                setformdata(data[0])
+                setformdata(data.posts[0])
             }
 
 

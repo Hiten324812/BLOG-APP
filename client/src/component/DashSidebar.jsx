@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react'
 
 import {Link, useLocation} from 'react-router-dom'
 
-import { HiArrowCircleRight, HiDocumentText, HiUser } from 'react-icons/hi'
+import { HiArrowCircleRight, HiDocumentText, HiOutlineUserGroup , HiUser  } from 'react-icons/hi'
 
 import { useDispatch , useSelector } from 'react-redux'
 
@@ -71,7 +71,7 @@ export default function DashSidebar() {
             { currentUser.isadmin && (
                  <Link to='/dashboard?tab=getusers'>
                  <Sidebar.Item className='text-xl' active={tab === 'getusers'} 
-              icon={HiUser} as={'div'}>
+              icon={HiOutlineUserGroup} as={'div'}>
                Users  
               </Sidebar.Item>
                  </Link>

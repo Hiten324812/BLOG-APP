@@ -19,6 +19,8 @@ export default function DashUsers() {
 
     const [users,setusers] = useState([])
 
+    const [notaccess,setnotaccess] = useState(null)
+
 
     const { currentUser } = useSelector( state => state.user )
 
@@ -36,8 +38,14 @@ export default function DashUsers() {
             }
         }
 
-        if ( currentUser.isadmin ){
+        if ( currentUser.isadmin )
+          {
+           setnotaccess(null)
             fetchdata()
+        }
+        else
+        {
+           setnotaccess('you have not allowed to see all users details')
         }
        
     } , [currentUser._id])
@@ -118,6 +126,7 @@ export default function DashUsers() {
             <Table.Head>
             <Table.HeadCell>
                 Date created 
+                (MM/DD/YY)
                </Table.HeadCell>
                <Table.HeadCell>
                user image 
@@ -187,7 +196,7 @@ export default function DashUsers() {
            </>
         )  : 
 
-        (<p className='text-3xl mt-8'> You have no Users  </p>)
+        (<p className='text-3xl mt-8'> { notaccess ? notaccess : 'You have no Users'  }   </p>)
       }
 
 <Modal show={showmodel} size="md" onClose={() => setshowmodel(false)} popup>
@@ -198,7 +207,7 @@ export default function DashUsers() {
            dark:text-gray-200 mb-4' />
 
            <h3 className='text-lg mb-4 dark:text-gray-400'>
-            Are you sure you want to delete your account ?
+            Are you sure you want to delete this user account ?
            </h3>
 
            <div className='flex justify-center gap-4'>

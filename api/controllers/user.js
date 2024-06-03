@@ -122,7 +122,7 @@ exports.deleteuser = async (req,res,next) => {
      
        if (!req.user.isadmin)
         {
-            return next(403,'you are not allowed to delete user')
+            return next(403,'you are not allowed to delete user access')
         }
 
         try {

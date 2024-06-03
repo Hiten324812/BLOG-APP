@@ -11,11 +11,14 @@ import PrivateRoute from './component/PrivateRoute'
 import CreatePost from './pages/CreatePost'
 import IsadminPrivateRoute from './component/IsadminPrivateRoute'
 import UpdatePost from './pages/UpdatePost'
+import PostPage from './pages/PostPage'
+import ScrollToTop from './component/ScrollToTop'
 
 
 export default function App() {
   return (
     <BrowserRouter>
+    <ScrollToTop />
     <Header />
     <Routes>
       <Route path='/' element={<Home />} />
@@ -30,6 +33,7 @@ export default function App() {
         <Route path='/update-post/:postid' element={<UpdatePost />} />
       </Route>
       <Route path='/projects' element={ <Projects /> } />
+      <Route path='/post/:postslug' element={<PostPage />} />
     </Routes>
     <Footer />
     </BrowserRouter>

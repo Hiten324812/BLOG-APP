@@ -4,6 +4,7 @@ const dotenv = require('dotenv')
 const useroutes = require('./routes/user')
 const authroutes = require('./routes/auth')
 const postroutes = require('./routes/post')
+const commentroutes = require('./routes/comment')
 const cookieparser = require('cookie-parser')
 const cors = require('cors')
 
@@ -24,9 +25,10 @@ mongoose.connect(process.env.MONGO)
     console.log(err)
 })
 
-app.use('/api/user' ,useroutes);
+app.use('/api/user' ,useroutes)
 app.use('/api/auth', authroutes)
 app.use('/api/post',postroutes)
+app.use('/api/comment',commentroutes)
 
 
 app.use((err,req,res,next) => {

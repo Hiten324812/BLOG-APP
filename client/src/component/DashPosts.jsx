@@ -29,7 +29,8 @@ export default function DashPosts() {
             const data = await res.json()
 
             if (res.ok){
-                setpostdata(data)
+                setpostdata(data.posts)
+                
             }
         }
 
@@ -147,7 +148,8 @@ export default function DashPosts() {
                      {new Date(post.updatedAt).toLocaleDateString()}
                     </Table.Cell>
                     <Table.Cell>
-                      <Link to={`/post/${post.slug}`}>
+                      <Link to={`/post/${post.slug}`} >
+                
                       <img src={post.image} className='w-20 h-20' />
                       </Link>
                     </Table.Cell>
