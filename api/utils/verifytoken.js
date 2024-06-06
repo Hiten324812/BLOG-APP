@@ -16,6 +16,7 @@ const error = require('./error')
             {
                 return next(error(401,'unauthorized access'))
             }
+            
             req.user = user;
          
             next();

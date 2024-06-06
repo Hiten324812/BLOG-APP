@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { Button, Spinner } from 'flowbite-react'
+import { Button, Spinner ,Toast } from 'flowbite-react'
 import { Link, useParams } from 'react-router-dom'
 import CommentSection from '../component/CommentSection'
 
@@ -51,6 +51,8 @@ export default function PostPage() {
 
         fetchpost()
 
+        
+
     } , [postslug])
 
     if (loading)  return (
@@ -70,6 +72,7 @@ export default function PostPage() {
  
   return (
     <div className='p-3 flex flex-col max-w-6xl min-h-screen mx-auto mt-5'>
+
 
         <h1 className='text-center font-serif text-4xl'> { post && post.title } </h1>
 

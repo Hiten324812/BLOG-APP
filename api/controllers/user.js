@@ -118,7 +118,7 @@ exports.getUsers = async ( req,res,next ) => {
     }
 }
 
-exports.deleteuser = async (req,res,next) => {
+exports.admindeleteuser = async (req,res,next) => {
      
        if (!req.user.isadmin)
         {

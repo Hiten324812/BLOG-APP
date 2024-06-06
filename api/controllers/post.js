@@ -3,6 +3,7 @@ const errorhandler = require('../utils/error')
 const Post = require('../models/post')
 const slug = require('unique-slug')
 const uniqueSlug = require('unique-slug')
+const { Schema, default: mongoose } = require('mongoose')
 
 exports.createpost = async (req,res,next) => {
      

@@ -9,7 +9,7 @@ const postcontroller = require('../controllers/post')
 const router = express.Router()
 
 router.post('/create-post',verifytoken,postcontroller.createpost)
-router.get('/getposts',verifytoken,postcontroller.getpost)
+router.get('/getposts',postcontroller.getpost)
 router.delete('/delete/:postid/:userid',verifytoken,postcontroller.deletepost)
 router.put('/update-post/:postid/:userid',verifytoken,postcontroller.updatepost)
 

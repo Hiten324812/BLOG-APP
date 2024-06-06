@@ -2,6 +2,7 @@ const User = require('../models/user')
 const bcryptjs = require('bcryptjs')
 const errorhandler = require('../utils/error')
 const jwt = require('jsonwebtoken')
+const mongoose = require('mongoose')
 
 
 exports.signup = async (req,res,next) => {
@@ -46,6 +47,7 @@ exports.signin = async (req,res,next) => {
   try {
         const validuser = await User.findOne({ email })
 
+
         if (!validuser)
           {
            return next(errorhandler(404,'user not found!!'))
@@ -56,6 +58,7 @@ exports.signin = async (req,res,next) => {
         if ( !validpassword ) {
           return next(errorhandler(400,'invalid password'))
         }
+
 
         const token = jwt.sign({
             id : validuser._id  ,
@@ -83,6 +86,8 @@ exports.google = async(req,res,next) => {
 
   try {
          const user = await User.findOne( {email})
+
+        
          
          if (user){
           const token = jwt.sign( {id : user._id ,

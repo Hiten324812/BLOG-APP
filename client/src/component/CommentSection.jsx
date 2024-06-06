@@ -1,9 +1,13 @@
-import { Alert, Button, TextInput, Textarea } from 'flowbite-react'
+import { Alert, Button, TextInput, Textarea, Toast } from 'flowbite-react'
 import React , {useState , useEffect } from 'react'
 
 import { useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
-import moment from 'moment'
+import { Link , useNavigate } from 'react-router-dom'
+
+import { HiCheck } from 'react-icons/hi'
+
+
+import SingleComment from './SingleComment'
 
 
 export default function CommentSection( { postid } ) {
@@ -16,6 +20,33 @@ export default function CommentSection( { postid } ) {
     const [commenterror , setcommenterror] = useState(null)
 
     const [totalcomment , setotalcomment] = useState(0)
+
+    const [deleterror,setdeleterror] = useState(null)
+
+    useEffect ( () => {
+     
+      if ( deleterror !== null )
+        {
+          console.log('delete error')
+
+          const timer = setTimeout( () => {
+            setdeleterror(null)
+          } , 2000 )
+     
+     
+          return () => clearTimeout(timer)
+    
+        }
+      
+    
+     } , [deleterror]) 
+
+
+
+    
+    const navigate = useNavigate()
+
+
 
     const fetchcomments = async () => {
 
@@ -82,8 +113,73 @@ export default function CommentSection( { postid } ) {
 
     }
 
+    const handlelike = async (commentid) => {
+       try {
+           
+         
+         if (!currentUser)
+          {
+           navigate('/signin');
+           return ;
+          }
+
+
+
+         const res = await fetch(`/api/comment/likecomment/${commentid}`,{
+          method : 'PUT'
+         });
+
+         const data = await res.json()
+
+         if (!res.ok)
+          {
+              console.log('cannot like comment')
+          }
+          else
+          {
+             setallcomments( allcomments.map ( (com) => {
+              return (
+                (commentid === com._id) ? 
+                {
+                  ...com,
+                  likes : data.likes,
+                  numberoflikes : data.numberoflikes
+                } : com
+              )
+             }
+            )
+          ) 
+           
+           
+          }
+
+       } catch (error) {
+           console.log('internal server error')
+       }
+    }
+
+    const onedit = async(samplecom,editedcontent) =>{
+
+
+      setallcomments( allcomments.map( (com) => 
+        samplecom._id === com._id ? (
+             { ...com , content : editedcontent.content }
+        ) : com 
+      ))
+    }
+
+    const ondelete = async(comm) => {
+        
+         setallcomments ( allcomments.filter( (com) => com._id !== comm._id) )
+         setotalcomment(totalcomment-1)
+         setdeleterror('comment deleted')
+
+    }
+
+
 
     useEffect( () => {
+
 
       if (postid)
         {
@@ -151,32 +247,13 @@ export default function CommentSection( { postid } ) {
               
            <div className='flex flex-col gap-3'>      
            {
-             allcomments.map( (com) => {
-
-            return (
-              <div className='flex flex-row gap-3' key={com._id}>
-
-                <div className='self-center flex-shrink-0'>
-     
-               <img className='h-10 w-10 rounded-full' src={com.userid.profilepicture} />
-
-            
-               </div>
-                 
-                 <div className='flex flex-col'>
-
-                 <p className='text-lg font-semibold'> @{com.userid.username} <span className='text-sm mx-1 text-gray-600 dark:text-gray-400'>
-                 {moment(com.createdAt).fromNow()}
-                </span> </p>
-
-                 <p className='break-all'> {com.content} </p>
-
-                  </div>
-               
-              </div>
-            
+             allcomments.map( (com) => 
+              <SingleComment commen={com} 
+             handlelike={handlelike} 
+             onedit={onedit} 
+             ondelete={ondelete}
+             key={com._id} />
             )
-             })
            }
 
            </div>
@@ -188,7 +265,22 @@ export default function CommentSection( { postid } ) {
            )
         }
 
+
+       {
+        deleterror && (
+          <Toast className='fixed bottom-11 left-11'>
+          <div className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-green-100 text-green-500 dark:bg-green-800 dark:text-green-200">
+        <HiCheck className="h-5 w-5" />
+       </div>
+       <div className="ml-3 text-sm font-normal"> { deleterror }</div>
+        <Toast.Toggle />
+        </Toast>
+
+        )
+       }
+        
       
+     
 
     </div>
   )
