@@ -7,6 +7,7 @@ const postroutes = require('./routes/post')
 const commentroutes = require('./routes/comment')
 const cookieparser = require('cookie-parser')
 const cors = require('cors')
+const path = require('path')
 
 dotenv.config();
 
@@ -16,6 +17,10 @@ app.use(cookieparser())
 
 
 app.use(express.json())
+
+app.use(express.static(path.join(__dirname,'/client/dist')))
+
+
 
 mongoose.connect(process.env.MONGO)
 .then( (res) => {
@@ -29,6 +34,13 @@ app.use('/api/user' ,useroutes)
 app.use('/api/auth', authroutes)
 app.use('/api/post',postroutes)
 app.use('/api/comment',commentroutes)
+
+
+
+
+
+
+
 
 
 app.use((err,req,res,next) => {

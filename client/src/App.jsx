@@ -13,6 +13,7 @@ import IsadminPrivateRoute from './component/IsadminPrivateRoute'
 import UpdatePost from './pages/UpdatePost'
 import PostPage from './pages/PostPage'
 import ScrollToTop from './component/ScrollToTop'
+import Search from './pages/Search'
 
 
 export default function App() {
@@ -34,6 +35,7 @@ export default function App() {
       </Route>
       <Route path='/projects' element={ <Projects /> } />
       <Route path='/post/:postslug' element={<PostPage />} />
+      <Route path='/search' element={<Search />} />
     </Routes>
     <Footer />
     </BrowserRouter>

@@ -66,7 +66,7 @@ exports.getpost = async (req,res,next) => {
            query.userid = req.query.userid;
        }
        
-       if (req.query.category) {
+       if (req.query.category && req.query.category !== 'uncategorized') {
            query.category = req.query.category;
        }
        
@@ -86,7 +86,7 @@ exports.getpost = async (req,res,next) => {
        const total = await Post.countDocuments();
 
        
-       res.status(200).json({posts})
+       res.status(200).json({posts,total})
 
     } catch (error) {
         console.log(error)

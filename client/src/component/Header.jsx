@@ -1,7 +1,7 @@
 
 import {Avatar, Button, Dropdown, Navbar, TextInput} from 'flowbite-react'
 
-import { Link , useLocation } from 'react-router-dom'
+import { Link , useLocation ,useNavigate } from 'react-router-dom'
 
 import { AiOutlineSearch } from 'react-icons/ai'
 
@@ -12,6 +12,7 @@ import { useSelector ,useDispatch } from 'react-redux'
 import { toggletheme } from '../redux/theme/themeSlice'
 
 import { signoutSuccess } from '../redux/user/userSlice'
+import { useEffect, useState } from 'react'
 
 export default function Header() {
 
@@ -21,6 +22,28 @@ export default function Header() {
   const dispatch = useDispatch()
 
   const path = useLocation().pathname;
+
+  const location = useLocation()
+  const navigate = useNavigate()
+
+  const [searchterm,setsearchterm] = useState('')
+
+
+  const submitsearch =  (e) => {
+
+    e.preventDefault();
+
+    const urlparams = new URLSearchParams(location.search)
+
+    urlparams.set('searchterm',searchterm)
+
+    const searchquery = urlparams.toString()
+
+    navigate(`/search?${searchquery}`)
+
+
+     
+  }
 
   const handlesignout = async() => {
     try {
@@ -49,11 +72,13 @@ export default function Header() {
        Blog
       </Link>
 
-      <form className='md:order-3'>
+      <form className='md:order-3' onSubmit={submitsearch}>
         <TextInput
         type='text'
         placeholder='search'
+        value={searchterm}
         rightIcon={AiOutlineSearch}
+        onChange={ (e) => setsearchterm(e.target.value)}
         className='hidden lg:inline'
          />
       </form>

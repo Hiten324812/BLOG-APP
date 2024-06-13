@@ -42,7 +42,6 @@ export default function CommentSection( { postid } ) {
      } , [deleterror]) 
 
 
-
     
     const navigate = useNavigate()
 
@@ -265,7 +264,7 @@ export default function CommentSection( { postid } ) {
            )
         }
 
-
+    
        {
         deleterror && (
           <Toast className='fixed bottom-11 left-11'>
@@ -278,6 +277,8 @@ export default function CommentSection( { postid } ) {
 
         )
        }
+
+
         
       
      
